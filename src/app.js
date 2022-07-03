@@ -52,9 +52,6 @@ app.get("/register", function(req, res) {
 
 app.post("/register",async function(req, res) {
     try {
-        //res.send(req.body.username);
-        //console.log(req.body.username);
-        //console.log(req.body.password);
         const password = req.body.password;
         const confirmpassword = req.body.confirmpassword;
         if(password === confirmpassword){
