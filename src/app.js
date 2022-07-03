@@ -37,7 +37,7 @@ app.post("/login",async function(req, res){
         const useremail = await Register.findOne({email:req.body.email});
         //console.log(useremail.password);
         if(await bcrypt.compare(req.body.password,useremail.password)){
-            res.send('logged in');
+            res.send('logged in as '+useremail.username);
         }else{
             res.send('not logged in');
         }
