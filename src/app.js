@@ -23,7 +23,8 @@ app.set("views",templates_path);
 hbs.registerPartials(partials_path);
 
 app.get("/", function(req, res) {
-    //res.send("hello");
+    //var header=req.headers;
+    //console.log(header);
     res.render('index');
 });
 
@@ -33,7 +34,6 @@ app.get("/login", function(req, res) {
 
 app.post("/login",async function(req, res){
     try{
-        
         const useremail = await Register.findOne({email:req.body.email});
         //console.log(useremail.password);
         if(await bcrypt.compare(req.body.password,useremail.password)){
