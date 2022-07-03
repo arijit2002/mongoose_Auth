@@ -3,9 +3,11 @@ const app = express();
 const path = require('path');
 const hbs = require('hbs');
 const bcrypt = require('bcrypt');
+const alerts = require('alert');
 
 require('./db/conn');
-const Register = require("./models/registers")
+const Register = require("./models/registers");
+const { use } = require('passport');
 
 const port = process.env.PORT || 3000;
 
@@ -52,20 +54,27 @@ app.get("/register", function(req, res) {
 
 app.post("/register",async function(req, res) {
     try {
-        const password = req.body.password;
-        const confirmpassword = req.body.confirmpassword;
-        if(password === confirmpassword){
-            const salt=await bcrypt.genSalt(10);
-            const hashedpassword = await bcrypt.hash(password, salt);
-            const registerUser = new Register({
-                username: req.body.username,
-                email: req.body.email,
-                password: hashedpassword,
-            });
-            const registered = await registerUser.save();
-            res.status(201).render("index")
+        const useremail = await Register.findOne({email:req.body.email});
+        console.log(useremail);
+        if(useremail.email === req.body.email){
+            alerts("email already registered!!");
+            res.render('register');
         }else{
-            res.send("passwords are not matching");
+            const password = req.body.password;
+            const confirmpassword = req.body.confirmpassword;
+            if(password === confirmpassword){
+                const salt=await bcrypt.genSalt(10);
+                const hashedpassword = await bcrypt.hash(password, salt);
+                const registerUser = new Register({
+                    username: req.body.username,
+                    email: req.body.email,
+                    password: hashedpassword,
+                });
+                const registered = await registerUser.save();
+                res.status(201).render("index")
+            }else{
+                res.send("passwords are not matching");
+            }
         }
     } catch (err) {
         res.status(400).send(err);
