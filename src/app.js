@@ -55,8 +55,8 @@ app.get("/register", function(req, res) {
 app.post("/register",async function(req, res) {
     try {
         const useremail = await Register.findOne({email:req.body.email});
-        console.log(useremail);
-        if(useremail.email === req.body.email){
+        //console.log(useremail);
+        if(useremail){
             alerts("email already registered!!");
             res.render('register');
         }else{
